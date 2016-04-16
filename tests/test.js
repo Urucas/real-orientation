@@ -31,20 +31,15 @@ describe("Test suite", () => {
   });
   it("Test control is initialized", (done) => {
     let control = new Arduino({baudRate:9600, portName:portName, verbose:true});
+    let a = 45;
+    let shake = (control, a) => {
+      a = a == 135 ? 45 : 135;
+      control.rotate(a).then( _ => {
+        shake(control, a);
+      });
+    }
     control.on('connection', _ => {
-      console.log("connection");
-      control.rotate(90).then( (response) =>{
-        console.log("90", response);
-      });
-      control.rotate(180).then( (response) =>{
-        console.log("180", response);
-      });
-      control.rotate(45).then( (response) =>{
-        console.log("45", response);
-      });
-      control.rotate(135).then( (response) =>{
-        console.log("135", response);
-      });
+      shake(control, a);
     })
     control.connect();
   }); 
