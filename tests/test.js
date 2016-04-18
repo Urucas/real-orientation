@@ -29,14 +29,13 @@ describe("Test suite", () => {
     control.validAngle(-45).should.equal(45);
     done();
   });
-  it("Test control is initialized", (done) => {
+  it("Test control is initialized", async (done) => {
     let control = new Arduino({baudRate:9600, portName:portName, verbose:true});
     let a = 45;
-    let shake = (control, a) => {
+    let shake = async (control, a) => {
       a = a == 135 ? 45 : 135;
-      control.rotate(a).then( _ => {
-        shake(control, a);
-      });
+      await control.rotate(a);
+      shake(control, a);
     }
     control.on('connection', _ => {
       shake(control, a);
